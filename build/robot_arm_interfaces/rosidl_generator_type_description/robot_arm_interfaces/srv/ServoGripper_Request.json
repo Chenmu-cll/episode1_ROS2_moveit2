@@ -1,0 +1,26 @@
+{
+  "type_description_msg": {
+    "type_description": {
+      "type_name": "robot_arm_interfaces/srv/ServoGripper_Request",
+      "fields": [
+        {
+          "name": "angle",
+          "type": {
+            "type_id": 6,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": ""
+          },
+          "default_value": ""
+        }
+      ]
+    },
+    "referenced_type_descriptions": []
+  },
+  "type_hashes": [
+    {
+      "type_name": "robot_arm_interfaces/srv/ServoGripper_Request",
+      "hash_string": "RIHS01_de4da0a840ca70ce05ea9599e6021f7a2b0f10c004e27b86135237e4075bee5c"
+    }
+  ]
+}

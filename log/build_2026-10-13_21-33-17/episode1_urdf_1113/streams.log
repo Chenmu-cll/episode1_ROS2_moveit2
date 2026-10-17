@@ -1,0 +1,66 @@
+[0.446s] Invoking command in '/home/lccj/student_ros/src/episode1_urdf_1113': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/lccj/student_ros/build/episode1_urdf_1113/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/lccj/student_ros/install/episode1_urdf_1113/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/episode1_urdf_1113 build --build-base /home/lccj/student_ros/build/episode1_urdf_1113/build install --record /home/lccj/student_ros/build/episode1_urdf_1113/install.log --single-version-externally-managed install_data
+[0.567s] running egg_info
+[0.568s] creating ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info
+[0.576s] writing ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/PKG-INFO
+[0.576s] writing dependency_links to ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/dependency_links.txt
+[0.576s] writing requirements to ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/requires.txt
+[0.576s] writing top-level names to ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/top_level.txt
+[0.576s] writing manifest file '../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/SOURCES.txt'
+[0.593s] reading manifest file '../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/SOURCES.txt'
+[0.593s] writing manifest file '../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/SOURCES.txt'
+[0.593s] running build
+[0.593s] running build_py
+[0.593s] creating /home/lccj/student_ros/build/episode1_urdf_1113/build
+[0.593s] creating /home/lccj/student_ros/build/episode1_urdf_1113/build/lib
+[0.594s] creating /home/lccj/student_ros/build/episode1_urdf_1113/build/lib/episode1_urdf_1113
+[0.594s] copying episode1_urdf_1113/__init__.py -> /home/lccj/student_ros/build/episode1_urdf_1113/build/lib/episode1_urdf_1113
+[0.594s] running install
+[0.597s] running install_lib
+[0.605s] creating /home/lccj/student_ros/install/episode1_urdf_1113/lib/python3.12/site-packages/episode1_urdf_1113
+[0.605s] copying /home/lccj/student_ros/build/episode1_urdf_1113/build/lib/episode1_urdf_1113/__init__.py -> /home/lccj/student_ros/install/episode1_urdf_1113/lib/python3.12/site-packages/episode1_urdf_1113
+[0.606s] byte-compiling /home/lccj/student_ros/install/episode1_urdf_1113/lib/python3.12/site-packages/episode1_urdf_1113/__init__.py to __init__.cpython-312.pyc
+[0.606s] running install_data
+[0.606s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/ament_index
+[0.606s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/ament_index/resource_index
+[0.606s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/ament_index/resource_index/packages
+[0.606s] copying resource/episode1_urdf_1113 -> /home/lccj/student_ros/install/episode1_urdf_1113/share/ament_index/resource_index/packages
+[0.606s] copying package.xml -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113
+[0.606s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/launch
+[0.606s] copying launch/gz_simulator_launch.py -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/launch/
+[0.606s] copying launch/launch.py -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/launch/
+[0.606s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/urdf
+[0.606s] copying urdf/robot.sdf -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/urdf/
+[0.606s] copying urdf/episode1_urdf_1113.urdf -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/urdf/
+[0.606s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/world
+[0.606s] copying world/depot.sdf -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/world/
+[0.606s] copying world/empty_ground.sdf -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/world/
+[0.606s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/rviz
+[0.606s] copying rviz/view.rviz -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/rviz/
+[0.606s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes
+[0.606s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/collision
+[0.606s] copying meshes/collision/link5.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/collision/
+[0.606s] copying meshes/collision/link1.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/collision/
+[0.607s] copying meshes/collision/link6.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/collision/
+[0.607s] copying meshes/collision/link4.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/collision/
+[0.607s] copying meshes/collision/link3.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/collision/
+[0.607s] copying meshes/collision/base_link.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/collision/
+[0.607s] copying meshes/collision/link2.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/collision/
+[0.607s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/visual
+[0.607s] copying meshes/visual/link5.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/visual/
+[0.607s] copying meshes/visual/link1.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/visual/
+[0.607s] copying meshes/visual/link6.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/visual/
+[0.607s] copying meshes/visual/link4.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/visual/
+[0.607s] copying meshes/visual/link3.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/visual/
+[0.607s] copying meshes/visual/base_link.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/visual/
+[0.607s] copying meshes/visual/link2.STL -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/meshes/visual/
+[0.607s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/config
+[0.607s] copying config/gz_bridge.yaml -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/config/
+[0.607s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/models
+[0.607s] creating /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/models/robot
+[0.607s] copying models/robot/model.config -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/models/robot/
+[0.607s] copying models/robot/model.sdf -> /home/lccj/student_ros/install/episode1_urdf_1113/share/episode1_urdf_1113/models/robot/
+[0.607s] running install_egg_info
+[0.617s] Copying ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info to /home/lccj/student_ros/install/episode1_urdf_1113/lib/python3.12/site-packages/episode1_urdf_1113-0.0.0-py3.12.egg-info
+[0.617s] running install_scripts
+[0.677s] writing list of installed files to '/home/lccj/student_ros/build/episode1_urdf_1113/install.log'
+[0.690s] Invoked command in '/home/lccj/student_ros/src/episode1_urdf_1113' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/lccj/student_ros/build/episode1_urdf_1113/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/lccj/student_ros/install/episode1_urdf_1113/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/episode1_urdf_1113 build --build-base /home/lccj/student_ros/build/episode1_urdf_1113/build install --record /home/lccj/student_ros/build/episode1_urdf_1113/install.log --single-version-externally-managed install_data

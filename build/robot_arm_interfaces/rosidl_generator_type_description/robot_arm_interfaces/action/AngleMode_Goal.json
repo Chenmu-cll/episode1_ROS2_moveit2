@@ -1,0 +1,36 @@
+{
+  "type_description_msg": {
+    "type_description": {
+      "type_name": "robot_arm_interfaces/action/AngleMode_Goal",
+      "fields": [
+        {
+          "name": "angles",
+          "type": {
+            "type_id": 59,
+            "capacity": 6,
+            "string_capacity": 0,
+            "nested_type_name": ""
+          },
+          "default_value": ""
+        },
+        {
+          "name": "speed_ratio",
+          "type": {
+            "type_id": 11,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": ""
+          },
+          "default_value": ""
+        }
+      ]
+    },
+    "referenced_type_descriptions": []
+  },
+  "type_hashes": [
+    {
+      "type_name": "robot_arm_interfaces/action/AngleMode_Goal",
+      "hash_string": "RIHS01_29f6f34f5348147e572de75399108195beaf9c26fa4c6152f128eae26906f278"
+    }
+  ]
+}

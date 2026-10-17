@@ -1,0 +1,78 @@
+// generated from rosidl_adapter/resource/action.idl.em
+// with input from robot_arm_interfaces/action/MoveXyzRotation.action
+// generated code does not contain a copyright notice
+
+
+module robot_arm_interfaces {
+  module action {
+    typedef double double__3[3];
+    @verbatim (language="comment", text=
+      "Goal: What the client sends to start xyz rotation movement")
+    struct MoveXyzRotation_Goal {
+      @verbatim (language="comment", text=
+        "Target position [x, y, z] in mm")
+      double__3 position;
+
+      @verbatim (language="comment", text=
+        "Target rotation [rx, ry, rz] in degrees")
+      double__3 rotation;
+
+      @verbatim (language="comment", text=
+        "IK mode selection (\"xyz\" or \"zyx\")")
+      string ik_mode;
+
+      @verbatim (language="comment", text=
+        "Speed ratio (0.0 to 1.0)")
+      double speed_ratio;
+    };
+    typedef double double__6[6];
+    typedef double double__3[3];
+    @verbatim (language="comment", text=
+      "Result: What server sends when done")
+    struct MoveXyzRotation_Result {
+      @verbatim (language="comment", text=
+        "True if movement successful")
+      boolean success;
+
+      @verbatim (language="comment", text=
+        "Error message or success info")
+      string message;
+
+      @verbatim (language="comment", text=
+        "How long the movement took")
+      double execution_time;
+
+      @verbatim (language="comment", text=
+        "IK solution angles (degrees)")
+      double__6 solution_angles;
+
+      @verbatim (language="comment", text=
+        "Final position achieved")
+      double__3 final_position;
+
+      @verbatim (language="comment", text=
+        "Final rotation achieved")
+      double__3 final_rotation;
+    };
+    typedef double double__6[6];
+    @verbatim (language="comment", text=
+      "Feedback: Sent continuously during execution")
+    struct MoveXyzRotation_Feedback {
+      @verbatim (language="comment", text=
+        "Time elapsed since start")
+      double elapsed_time;
+
+      @verbatim (language="comment", text=
+        "Movement progress (0.0 to 1.0)")
+      double progress;
+
+      @verbatim (language="comment", text=
+        "Current motor angles")
+      double__6 current_angles;
+
+      @verbatim (language="comment", text=
+        "Human-readable status")
+      string status_message;
+    };
+  };
+};

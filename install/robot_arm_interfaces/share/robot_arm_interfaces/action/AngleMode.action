@@ -1,0 +1,15 @@
+# Goal: What the client sends to start angle mode movement
+float64[6] angles            # Target angles for 6 motors (degrees)
+float64 speed_ratio          # Speed ratio (0.0 to 1.0)
+---
+# Result: What server sends when done
+bool success                 # True if movement successful
+string message              # Error message or success info
+float64 execution_time      # How long the movement took
+float64[6] final_angles     # Final angles achieved
+---
+# Feedback: Sent continuously during execution
+float64 elapsed_time        # Time elapsed since start
+float64 progress           # Movement progress (0.0 to 1.0)
+float64[6] current_angles  # Current motor angles
+string status_message      # Human-readable status

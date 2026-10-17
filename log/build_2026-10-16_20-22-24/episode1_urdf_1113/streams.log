@@ -1,0 +1,19 @@
+[0.454s] Invoking command in '/home/lccj/student_ros/src/episode1_urdf_1113': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/lccj/student_ros/build/episode1_urdf_1113/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/lccj/student_ros/install/episode1_urdf_1113/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/episode1_urdf_1113 build --build-base /home/lccj/student_ros/build/episode1_urdf_1113/build install --record /home/lccj/student_ros/build/episode1_urdf_1113/install.log --single-version-externally-managed install_data
+[0.584s] running egg_info
+[0.593s] writing ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/PKG-INFO
+[0.593s] writing dependency_links to ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/dependency_links.txt
+[0.593s] writing requirements to ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/requires.txt
+[0.593s] writing top-level names to ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/top_level.txt
+[0.610s] reading manifest file '../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/SOURCES.txt'
+[0.611s] writing manifest file '../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info/SOURCES.txt'
+[0.611s] running build
+[0.611s] running build_py
+[0.612s] running install
+[0.615s] running install_lib
+[0.624s] running install_data
+[0.625s] running install_egg_info
+[0.634s] removing '/home/lccj/student_ros/install/episode1_urdf_1113/lib/python3.12/site-packages/episode1_urdf_1113-0.0.0-py3.12.egg-info' (and everything under it)
+[0.634s] Copying ../../build/episode1_urdf_1113/episode1_urdf_1113.egg-info to /home/lccj/student_ros/install/episode1_urdf_1113/lib/python3.12/site-packages/episode1_urdf_1113-0.0.0-py3.12.egg-info
+[0.635s] running install_scripts
+[0.695s] writing list of installed files to '/home/lccj/student_ros/build/episode1_urdf_1113/install.log'
+[0.708s] Invoked command in '/home/lccj/student_ros/src/episode1_urdf_1113' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/lccj/student_ros/build/episode1_urdf_1113/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/lccj/student_ros/install/episode1_urdf_1113/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/episode1_urdf_1113 build --build-base /home/lccj/student_ros/build/episode1_urdf_1113/build install --record /home/lccj/student_ros/build/episode1_urdf_1113/install.log --single-version-externally-managed install_data

@@ -1,0 +1,19 @@
+# Goal: What the client sends to start linear movement
+float64[3] position          # Target position [x, y, z] in mm
+float64[3] rotation          # Target rotation [rx, ry, rz] in degrees
+string rotation_mode         # Rotation mode: 'xyz' or 'zyx', default: 'zyx'
+float64 step_size            # Step size for interpolation in mm, default: 8.0
+---
+# Result: What server sends when done
+bool success                 # True if linear movement was successful
+string message              # Status or error message
+float64 execution_time      # Total execution time in seconds
+int32 total_steps           # Total number of interpolation steps executed
+---
+# Feedback: Sent continuously during execution
+float64 elapsed_time        # Time elapsed since start
+float64 progress           # Movement progress (0.0 to 1.0)
+int32 current_step         # Current step number
+int32 total_steps          # Total number of steps
+float64[6] current_angles  # Current motor angles
+string status_message      # Human-readable status

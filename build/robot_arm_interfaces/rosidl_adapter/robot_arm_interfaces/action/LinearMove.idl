@@ -1,0 +1,76 @@
+// generated from rosidl_adapter/resource/action.idl.em
+// with input from robot_arm_interfaces/action/LinearMove.action
+// generated code does not contain a copyright notice
+
+
+module robot_arm_interfaces {
+  module action {
+    typedef double double__3[3];
+    @verbatim (language="comment", text=
+      "Goal: What the client sends to start linear movement")
+    struct LinearMove_Goal {
+      @verbatim (language="comment", text=
+        "Target position [x, y, z] in mm")
+      double__3 position;
+
+      @verbatim (language="comment", text=
+        "Target rotation [rx, ry, rz] in degrees")
+      double__3 rotation;
+
+      @verbatim (language="comment", text=
+        "Rotation mode: 'xyz' or 'zyx', default: 'zyx'")
+      string rotation_mode;
+
+      @verbatim (language="comment", text=
+        "Step size for interpolation in mm, default: 8.0")
+      double step_size;
+    };
+    @verbatim (language="comment", text=
+      "Result: What server sends when done")
+    struct LinearMove_Result {
+      @verbatim (language="comment", text=
+        "True if linear movement was successful")
+      boolean success;
+
+      @verbatim (language="comment", text=
+        "Status or error message")
+      string message;
+
+      @verbatim (language="comment", text=
+        "Total execution time in seconds")
+      double execution_time;
+
+      @verbatim (language="comment", text=
+        "Total number of interpolation steps executed")
+      int32 total_steps;
+    };
+    typedef double double__6[6];
+    @verbatim (language="comment", text=
+      "Feedback: Sent continuously during execution")
+    struct LinearMove_Feedback {
+      @verbatim (language="comment", text=
+        "Time elapsed since start")
+      double elapsed_time;
+
+      @verbatim (language="comment", text=
+        "Movement progress (0.0 to 1.0)")
+      double progress;
+
+      @verbatim (language="comment", text=
+        "Current step number")
+      int32 current_step;
+
+      @verbatim (language="comment", text=
+        "Total number of steps")
+      int32 total_steps;
+
+      @verbatim (language="comment", text=
+        "Current motor angles")
+      double__6 current_angles;
+
+      @verbatim (language="comment", text=
+        "Human-readable status")
+      string status_message;
+    };
+  };
+};

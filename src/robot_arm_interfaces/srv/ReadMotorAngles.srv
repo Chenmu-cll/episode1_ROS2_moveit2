@@ -1,0 +1,6 @@
+# Request: No input needed
+---
+# Response: Motor angles for all 6 joints
+float64[6] angles    # Current angles of all 6 motors in degrees
+bool success         # True if reading was successful
+string message       # Error message if reading failed

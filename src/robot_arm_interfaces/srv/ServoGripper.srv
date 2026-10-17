@@ -1,0 +1,7 @@
+# Request: Servo gripper angle control
+int32 angle          # Gripper angle (0-110 degrees)
+---
+# Response: Operation result
+bool success         # True if operation was successful
+string message       # Status message or error description
+int32 actual_angle   # The actual angle set (clamped to 0-110 range)

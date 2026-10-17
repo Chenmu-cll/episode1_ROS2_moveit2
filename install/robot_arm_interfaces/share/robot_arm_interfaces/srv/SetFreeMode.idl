@@ -1,0 +1,27 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from robot_arm_interfaces/srv/SetFreeMode.srv
+// generated code does not contain a copyright notice
+
+
+module robot_arm_interfaces {
+  module srv {
+    @verbatim (language="comment", text=
+      "Request: Set free mode (teaching mode) command")
+    struct SetFreeMode_Request {
+      @verbatim (language="comment", text=
+        "True (1) for free mode, False (0) for locked mode")
+      boolean enable;
+    };
+    @verbatim (language="comment", text=
+      "Response: Operation result")
+    struct SetFreeMode_Response {
+      @verbatim (language="comment", text=
+        "True if operation was successful")
+      boolean success;
+
+      @verbatim (language="comment", text=
+        "Status message or error description")
+      string message;
+    };
+  };
+};

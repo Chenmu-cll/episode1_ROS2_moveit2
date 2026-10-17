@@ -1,0 +1,4 @@
+[console_scripts]
+client_demo = demo.client_demo:main
+interface = episode_controller.robot_interface_node:main
+moveit_bridge = episode_controller.moveit_trajectory_bridge:main

@@ -1,0 +1,30 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from robot_arm_interfaces/srv/ReadMotorAngles.srv
+// generated code does not contain a copyright notice
+
+
+module robot_arm_interfaces {
+  module srv {
+    @verbatim (language="comment", text=
+      "Request: No input needed")
+    struct ReadMotorAngles_Request {
+      uint8 structure_needs_at_least_one_member;
+    };
+    typedef double double__6[6];
+    @verbatim (language="comment", text=
+      "Response: Motor angles for all 6 joints")
+    struct ReadMotorAngles_Response {
+      @verbatim (language="comment", text=
+        "Current angles of all 6 motors in degrees")
+      double__6 angles;
+
+      @verbatim (language="comment", text=
+        "True if reading was successful")
+      boolean success;
+
+      @verbatim (language="comment", text=
+        "Error message if reading failed")
+      string message;
+    };
+  };
+};

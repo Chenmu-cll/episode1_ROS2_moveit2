@@ -1,0 +1,13 @@
+{
+  "package_name": "robot_arm_interfaces",
+  "non_idl_tuples": [
+    "/home/lccj/student_ros/src/robot_arm_interfaces:action/AngleMode.action",
+    "/home/lccj/student_ros/src/robot_arm_interfaces:action/MoveXyzRotation.action",
+    "/home/lccj/student_ros/src/robot_arm_interfaces:action/LinearMove.action",
+    "/home/lccj/student_ros/src/robot_arm_interfaces:srv/ReadMotorAngles.srv",
+    "/home/lccj/student_ros/src/robot_arm_interfaces:srv/GripperControl.srv",
+    "/home/lccj/student_ros/src/robot_arm_interfaces:srv/ServoGripper.srv",
+    "/home/lccj/student_ros/src/robot_arm_interfaces:srv/SetFreeMode.srv",
+    "/home/lccj/student_ros/src/robot_arm_interfaces:msg/MotorAngles.msg"
+  ]
+}

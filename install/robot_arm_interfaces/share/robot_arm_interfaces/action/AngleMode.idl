@@ -1,0 +1,61 @@
+// generated from rosidl_adapter/resource/action.idl.em
+// with input from robot_arm_interfaces/action/AngleMode.action
+// generated code does not contain a copyright notice
+
+
+module robot_arm_interfaces {
+  module action {
+    typedef double double__6[6];
+    @verbatim (language="comment", text=
+      "Goal: What the client sends to start angle mode movement")
+    struct AngleMode_Goal {
+      @verbatim (language="comment", text=
+        "Target angles for 6 motors (degrees)")
+      double__6 angles;
+
+      @verbatim (language="comment", text=
+        "Speed ratio (0.0 to 1.0)")
+      double speed_ratio;
+    };
+    typedef double double__6[6];
+    @verbatim (language="comment", text=
+      "Result: What server sends when done")
+    struct AngleMode_Result {
+      @verbatim (language="comment", text=
+        "True if movement successful")
+      boolean success;
+
+      @verbatim (language="comment", text=
+        "Error message or success info")
+      string message;
+
+      @verbatim (language="comment", text=
+        "How long the movement took")
+      double execution_time;
+
+      @verbatim (language="comment", text=
+        "Final angles achieved")
+      double__6 final_angles;
+    };
+    typedef double double__6[6];
+    @verbatim (language="comment", text=
+      "Feedback: Sent continuously during execution")
+    struct AngleMode_Feedback {
+      @verbatim (language="comment", text=
+        "Time elapsed since start")
+      double elapsed_time;
+
+      @verbatim (language="comment", text=
+        "Movement progress (0.0 to 1.0)")
+      double progress;
+
+      @verbatim (language="comment", text=
+        "Current motor angles")
+      double__6 current_angles;
+
+      @verbatim (language="comment", text=
+        "Human-readable status")
+      string status_message;
+    };
+  };
+};

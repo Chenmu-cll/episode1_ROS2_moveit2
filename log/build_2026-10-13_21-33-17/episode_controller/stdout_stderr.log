@@ -1,0 +1,46 @@
+running egg_info
+creating ../../build/episode_controller/episode_controller.egg-info
+writing ../../build/episode_controller/episode_controller.egg-info/PKG-INFO
+writing dependency_links to ../../build/episode_controller/episode_controller.egg-info/dependency_links.txt
+writing entry points to ../../build/episode_controller/episode_controller.egg-info/entry_points.txt
+writing requirements to ../../build/episode_controller/episode_controller.egg-info/requires.txt
+writing top-level names to ../../build/episode_controller/episode_controller.egg-info/top_level.txt
+writing manifest file '../../build/episode_controller/episode_controller.egg-info/SOURCES.txt'
+reading manifest file '../../build/episode_controller/episode_controller.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file '../../build/episode_controller/episode_controller.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/lccj/student_ros/build/episode_controller/build
+creating /home/lccj/student_ros/build/episode_controller/build/lib
+creating /home/lccj/student_ros/build/episode_controller/build/lib/demo
+copying demo/client_demo.py -> /home/lccj/student_ros/build/episode_controller/build/lib/demo
+copying demo/__init__.py -> /home/lccj/student_ros/build/episode_controller/build/lib/demo
+creating /home/lccj/student_ros/build/episode_controller/build/lib/episode_controller
+copying episode_controller/robot_interface_node.py -> /home/lccj/student_ros/build/episode_controller/build/lib/episode_controller
+copying episode_controller/__init__.py -> /home/lccj/student_ros/build/episode_controller/build/lib/episode_controller
+running install
+running install_lib
+creating /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/demo
+copying /home/lccj/student_ros/build/episode_controller/build/lib/demo/client_demo.py -> /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/demo
+copying /home/lccj/student_ros/build/episode_controller/build/lib/demo/__init__.py -> /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/demo
+creating /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/episode_controller
+copying /home/lccj/student_ros/build/episode_controller/build/lib/episode_controller/robot_interface_node.py -> /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/episode_controller
+copying /home/lccj/student_ros/build/episode_controller/build/lib/episode_controller/__init__.py -> /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/episode_controller
+byte-compiling /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/demo/client_demo.py to client_demo.cpython-312.pyc
+byte-compiling /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/demo/__init__.py to __init__.cpython-312.pyc
+byte-compiling /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/episode_controller/robot_interface_node.py to robot_interface_node.cpython-312.pyc
+byte-compiling /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/episode_controller/__init__.py to __init__.cpython-312.pyc
+running install_data
+creating /home/lccj/student_ros/install/episode_controller/share/ament_index
+creating /home/lccj/student_ros/install/episode_controller/share/ament_index/resource_index
+creating /home/lccj/student_ros/install/episode_controller/share/ament_index/resource_index/packages
+copying resource/episode_controller -> /home/lccj/student_ros/install/episode_controller/share/ament_index/resource_index/packages
+copying package.xml -> /home/lccj/student_ros/install/episode_controller/share/episode_controller
+running install_egg_info
+Copying ../../build/episode_controller/episode_controller.egg-info to /home/lccj/student_ros/install/episode_controller/lib/python3.12/site-packages/episode_controller-0.0.0-py3.12.egg-info
+running install_scripts
+Installing client_demo script to /home/lccj/student_ros/install/episode_controller/lib/episode_controller
+Installing interface script to /home/lccj/student_ros/install/episode_controller/lib/episode_controller
+Installing moveit_bridge script to /home/lccj/student_ros/install/episode_controller/lib/episode_controller
+writing list of installed files to '/home/lccj/student_ros/build/episode_controller/install.log'

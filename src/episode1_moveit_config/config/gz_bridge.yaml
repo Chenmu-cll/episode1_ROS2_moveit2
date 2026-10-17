@@ -1,0 +1,9 @@
+# 路径 B（MoveIt + Gazebo）专用桥接配置。
+# 仅桥接仿真时钟，供 use_sim_time 使用。
+# 关节状态由 ros2_control 的 joint_state_broadcaster 直接发布到 /joint_states，
+# TF 由 robot_state_publisher + 静态 TF（world->base_link）提供，均无需在此桥接。
+- ros_topic_name: "clock"
+  gz_topic_name: "clock"
+  ros_type_name: "rosgraph_msgs/msg/Clock"
+  gz_type_name: "gz.msgs.Clock"
+  direction: GZ_TO_ROS

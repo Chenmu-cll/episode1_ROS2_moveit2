@@ -1,0 +1,2 @@
+# Package data files (add entries here when .so files exist)
+# recursive-include episode_controller *.so

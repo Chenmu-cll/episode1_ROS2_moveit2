@@ -1,0 +1,8 @@
+/home/lccj/student_ros/build/robot_arm_interfaces/rosidl_adapter/robot_arm_interfaces:action/AngleMode.idl
+/home/lccj/student_ros/build/robot_arm_interfaces/rosidl_adapter/robot_arm_interfaces:action/MoveXyzRotation.idl
+/home/lccj/student_ros/build/robot_arm_interfaces/rosidl_adapter/robot_arm_interfaces:action/LinearMove.idl
+/home/lccj/student_ros/build/robot_arm_interfaces/rosidl_adapter/robot_arm_interfaces:srv/ReadMotorAngles.idl
+/home/lccj/student_ros/build/robot_arm_interfaces/rosidl_adapter/robot_arm_interfaces:srv/GripperControl.idl
+/home/lccj/student_ros/build/robot_arm_interfaces/rosidl_adapter/robot_arm_interfaces:srv/ServoGripper.idl
+/home/lccj/student_ros/build/robot_arm_interfaces/rosidl_adapter/robot_arm_interfaces:srv/SetFreeMode.idl
+/home/lccj/student_ros/build/robot_arm_interfaces/rosidl_adapter/robot_arm_interfaces:msg/MotorAngles.idl

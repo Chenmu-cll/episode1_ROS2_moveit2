@@ -1,0 +1,6 @@
+# Request: Gripper control command
+bool enable          # True for gripper_on, False for gripper_off
+---
+# Response: Operation result
+bool success         # True if operation was successful
+string message       # Status message or error description

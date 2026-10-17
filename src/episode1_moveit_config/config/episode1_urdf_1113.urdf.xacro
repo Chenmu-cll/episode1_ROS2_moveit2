@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="episode1_urdf_1113">
+    <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
+
+    <!-- Import episode1_urdf_1113 urdf file -->
+    <xacro:include filename="$(find episode1_urdf_1113)/urdf/episode1_urdf_1113.urdf" />
+
+    <!-- Import control_xacro -->
+    <xacro:include filename="episode1_urdf_1113.ros2_control.xacro" />
+
+
+    <xacro:episode1_urdf_1113_ros2_control name="GazeboSystem" initial_positions_file="$(arg initial_positions_file)"/>
+
+</robot>
