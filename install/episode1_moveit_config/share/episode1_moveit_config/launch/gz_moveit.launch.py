@@ -1,1 +1,0 @@
-/home/lccj/student_ros/src/episode1_moveit_config/launch/gz_moveit.launch.py

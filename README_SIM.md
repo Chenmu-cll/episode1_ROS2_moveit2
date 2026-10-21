@@ -1,269 +1,218 @@
 # 机械臂 Gazebo 仿真指南
 
-## 架构概览
+> 本文档描述 episode1 六轴机械臂的 Gazebo 仿真环境，覆盖两种仿真方式：
+> **MoveIt + ros2_control 完整流水线**（推荐）与**传统 SDF + PID 关节控制**（旧版）。
+
+---
+
+## 一、环境要求
+
+| 项目 | 版本 |
+| --- | --- |
+| 操作系统 | Ubuntu 24.04 |
+| ROS 2 | Jazzy |
+| Gazebo | Harmonic（随 `ros-jazzy-ros-gz-sim` 安装） |
+| gz_ros2_control | 1.2.20（随 `ros-jazzy-gz-ros2-control` 安装） |
+| MoveIt 2 | 随 Jazzy 发行版 |
+| 硬件 | 物理机 + NVIDIA 独显（RTX 4060） |
+
+> **注意**：本项目运行在物理机上，**不需要** `LIBGL_ALWAYS_SOFTWARE=1` 软件渲染。
+> 若通过 snap 版 VS Code 启动终端，需清理 snap 注入的环境变量（见下文「常见问题」），
+> 该清理已内置在 `gz_moveit.launch.py` 中，无需手动处理。
+
+---
+
+## 二、推荐方式：MoveIt + ros2_control 完整流水线
+
+这是当前主用的仿真方式，实现「Gazebo 物理仿真 + ros2_control 控制器 + MoveIt 运动规划 + RViz 可视化」全链路：
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    ROS2 Launch                          │
-│                                                         │
-│  ┌──────────┐  ┌──────────────┐  ┌──────────────────┐  │
-│  │  Gazebo  │  │ ros_gz_bridge│  │ robot_state      │  │
-│  │  (世界+  │  │ (话题翻译)   │  │ _publisher       │  │
-│  │   机械臂) │  │              │  │ (TF发布)         │  │
-│  └────┬─────┘  └──────┬───────┘  └────────┬─────────┘  │
-│       │               │                   │             │
-│  ┌────┴───────────────┴───────────────────┴─────────┐  │
-│  │              通信层                               │  │
-│  │  Gazebo Transport ←→ ros_gz_bridge ←→ ROS2 Topic │  │
-│  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
+RViz 拖拽 → MoveIt move_group 规划 → FollowJointTrajectory Action
+         → arm_group_controller (joint_trajectory_controller)
+         → gz_ros2_control GazeboSimSystem → Gazebo 关节运动
+```
+
+### 架构
+
+```
+┌────────────────────────────────────────────────────────────┐
+│  gz_moveit.launch.py                                       │
+│                                                            │
+│  Gazebo (gz sim)  ←→  ros_gz_bridge (clock)  → use_sim_time│
+│      │                                                     │
+│      └─ GazeboSimROS2ControlPlugin                         │
+│           └─ controller_manager（跑在 Gazebo 进程内）       │
+│                ├─ joint_state_broadcaster                  │
+│                └─ arm_group_controller (position 接口)      │
+│                                                            │
+│  robot_state_publisher (xacro → robot_description)         │
+│  static TF world → base_link（虚拟关节）                    │
+│  move_group（MoveIt，use_sim_time）                        │
+│  rviz2（MoveIt 插件，直接读 robot_description_semantic）    │
+└────────────────────────────────────────────────────────────┘
 ```
 
 ### 关键文件
 
 | 文件 | 作用 |
-|------|------|
-| `world/empty_ground.sdf` | 仿真世界：灰色地面 + 光源 + 机械臂 |
-| `models/robot/model.sdf` | 机械臂模型（6 关节 + PID 控制器） |
-| `models/robot/model.config` | 模型元信息（Gazebo 识别用） |
-| `launch/gz_simulator_launch.py` | 一键启动仿真 |
-| `launch/launch.py` | RViz 可视化（无物理，仅查看模型） |
-| `config/gz_bridge.yaml` | Gazebo ↔ ROS2 话题桥接配置 |
+| --- | --- |
+| `episode1_moveit_config/launch/gz_moveit.launch.py` | 一键启动完整流水线 |
+| `episode1_moveit_config/config/episode1_urdf_1113.urdf.xacro` | 汇总 URDF + ros2_control 标签 |
+| `episode1_moveit_config/config/episode1_urdf_1113.ros2_control.xacro` | 硬件接口 + Gazebo 插件 + 位置增益 |
+| `episode1_moveit_config/config/ros2_controllers.yaml` | controller_manager 与控制器配置 |
+| `episode1_moveit_config/config/moveit_controllers.yaml` | MoveIt 侧控制器映射 |
+| `episode1_moveit_config/config/gz_bridge.yaml` | 桥接仿真时钟（仅 clock） |
+| `episode1_moveit_config/config/empty_ground.sdf` | 仿真世界 |
 
----
-
-## 环境要求
-
-- **OS**: Ubuntu 24.04
-- **ROS2**: Jazzy
-- **Gazebo**: Harmonic (随 ros-jazzy-ros-gz-sim 安装)
-- **VirtualBox**: 需启用 3D 加速 + 软件渲染（见下方）
-
----
-
-## 快速启动
-
-### 1. 安装依赖
-
-```bash
-sudo apt install ros-jazzy-ros-gz-sim ros-jazzy-ros-gz-bridge \
-  ros-jazzy-robot-state-publisher ros-jazzy-joint-state-publisher-gui
-```
-
-### 2. 编译
+### 启动
 
 ```bash
 cd ~/student_ros
 colcon build
 source install/setup.bash
+
+ros2 launch episode1_moveit_config gz_moveit.launch.py
 ```
 
-### 3. 启动仿真
+### 使用
+
+1. 等待 Gazebo GUI、RViz、move_group 全部就绪（按 3s/7s/10s/12s 顺序自动拉起）。
+2. 在 RViz 的 MotionPlanning 面板拖拽末端执行器设定目标位姿。
+3. 点击 **Plan & Execute**，Gazebo 中机械臂应实际运动并保持目标位姿。
+
+---
+
+## 三、关键配置说明
+
+### 1. ros2_control 标签结构（顶层）
+
+`<ros2_control>` 必须是 `<robot>` 的**直接子元素**（顶层），不能嵌套在 `<gazebo><plugin>` 里。
+Gazebo 内的 controller_manager 通过 `/robot_description` 话题收到 URDF 后，用 `parse_urdf`
+读取顶层 `<ros2_control>` 标签来初始化 `GazeboSimSystem` 硬件接口。
+
+`<gazebo><plugin>` 只负责实例化 controller_manager 并加载控制器 YAML 配置。
+
+### 2. 位置接口增益 `position_proportional_gain`
+
+位置指令接口（`command_interface position`）**不走力矩**，而是用一个比例速度控制器追位置：
+
+```
+关节速度 = position_proportional_gain × 位置误差 × controller_manager_update_rate
+```
+
+- 默认增益 0.1 太弱，在真实重力下有稳态误差，表现为「规划完成但机械臂抬不起来」。
+- 本项目已设为 **0.5**（官方文档示例值）。
+- 取值规则：`≤1` 不振荡，`≤2` 稳定。偏软可加到 0.8，抖动则降回 0.3~0.4。
+
+> 关节 `<limit effort="...">` 对位置接口**无影响**，只在 effort/velocity 接口下才生效。
+
+### 3. controller_manager 由 Gazebo 插件拉起
+
+无需单独启动 `ros2_control_node`。`GazeboSimROS2ControlPlugin` 会在 Gazebo 进程内实例化
+controller_manager，`spawn_entity` 生成机器人后自动上线；只需用 `spawner` 往其中加载控制器。
+
+---
+
+## 四、传统方式：SDF + PID 关节控制（旧版）
+
+该方式使用 Gazebo 原生 `JointController`（PID）插件直接控制关节，不经过 ros2_control / MoveIt。
 
 ```bash
-export LIBGL_ALWAYS_SOFTWARE=1    # VirtualBox 必需
 ros2 launch episode1_urdf_1113 gz_simulator_launch.py
 ```
 
-### 4. 启动 RViz 可视化（可选）
+通过 Gazebo 原生话题以速度模式控制关节：
+
+```bash
+# 列出关节话题
+gz topic -l | grep joint
+
+# joint1 正转 0.5 rad/s
+gz topic -t "/model/episode1_urdf_1113/joint/joint1/cmd_vel" \
+  -m gz.msgs.Double -p "data: 0.5"
+```
+
+模型文件 `models/robot/model.sdf` 中为每个关节预设了 PID 控制器（`p_gain=200, i_gain=5, d_gain=10`）。
+
+> 该方式为旧版验证用途，后续统一迁移到上文的 ros2_control 流水线。
+
+---
+
+## 五、RViz 查看（无物理）
 
 ```bash
 ros2 launch episode1_urdf_1113 launch.py
 ```
 
----
-
-## 机械臂控制
-
-仿真中通过 Gazebo 原生话题直接控制关节（速度模式）：
-
-### 列出可用关节
-
-```bash
-gz topic -l | grep joint
-# 输出:
-# /model/episode1_urdf_1113/joint/joint1/cmd_vel
-# /model/episode1_urdf_1113/joint/joint2/cmd_vel
-# ...
-```
-
-### 关节控制命令
-
-```bash
-# 格式: gz topic -t "/model/模型名/joint/关节名/cmd_vel" -m gz.msgs.Double -p "data: 速度(rad/s)"
-
-# joint1 正转 0.5 rad/s
-gz topic -t "/model/episode1_urdf_1113/joint/joint1/cmd_vel" \
-  -m gz.msgs.Double -p "data: 0.5"
-
-# 停止
-gz topic -t "/model/episode1_urdf_1113/joint/joint1/cmd_vel" \
-  -m gz.msgs.Double -p "data: 0.0"
-
-# 批量控制示例
-for j in 1 2 3 4 5 6; do
-  gz topic -t "/model/episode1_urdf_1113/joint/joint${j}/cmd_vel" \
-    -m gz.msgs.Double -p "data: 0.2"
-done
-
-# 一键回零（全部停止）
-for j in 1 2 3 4 5 6; do
-  gz topic -t "/model/episode1_urdf_1113/joint/joint${j}/cmd_vel" \
-    -m gz.msgs.Double -p "data: 0.0"
-done
-```
-
-### PID 参数（已预设）
-
-每个关节的控制器参数（在 `models/robot/model.sdf` 中配置）：
-
-| 参数 | 值 | 含义 |
-|------|-----|------|
-| p_gain | 200 | 比例增益（响应速度） |
-| i_gain | 5 | 积分增益（消除稳态误差） |
-| d_gain | 10 | 微分增益（抑制振荡） |
-| damping | 5 | 被动阻尼（防自由落体） |
-| friction | 1 | 静摩擦（断电保持位置） |
+用于查看模型结构与 TF，`joint_state_publisher_gui` 可拖拽关节滑块。
 
 ---
 
-## RViz 查看 TF 树
+## 六、常见问题
 
-仿真启动后，ROS2 侧可以查看关节状态：
+### Gazebo GUI 闪退
 
-```bash
-# 查看 TF 树
-ros2 run tf2_tools view_frames
+snap 版 VS Code 注入的 `GTK_PATH` 会引导加载 `/snap/core20/.../libpthread.so.0`
+（Ubuntu 20.04 的 glibc 2.31），与系统 glibc 2.39 冲突，报
+`undefined symbol: __libc_pthread_init`。
 
-# 监听 joint_states
-ros2 topic echo /joint_states
+`gz_moveit.launch.py` 已内置 `UnsetEnvironmentVariable` 清掉 `GTK_PATH` / `GTK_MODULES` 等
+snap 变量，无需手动处理。
 
-# 查看 TF 变换
-ros2 topic echo /tf
-```
+### 控制器 spawner 退出码 1（Failed to acquire lock）
 
----
+两个 spawner 竞争同一个文件锁导致。已合并为单个 spawner 一次加载两个控制器。
 
-## 对比：仿真 vs 真机
+### 机械臂抬不起来（看似扭矩不足）
 
-| | 仿真 (Gazebo) | 真机 |
-|------|------|------|
-| 控制节点 | 不需要 | `episode_controller interface` |
-| 通信方式 | Gazebo Transport | CAN 总线 (PEAK) |
-| 关节命令 | `gz topic ... cmd_vel` | ROS2 Action (`angle_mode`) |
-| Python 依赖 | 不需要 | `episode_controller_core` wheel |
-| 夹爪 | 无 3D 模型 | 有伺服夹爪 (0-110°) |
-
----
-
-## 文件目录结构
-
-```
-episode1_urdf_1113/
-├── launch/
-│   ├── gz_simulator_launch.py   # 仿真启动
-│   └── launch.py                # RViz 启动
-├── world/
-│   └── empty_ground.sdf         # 仿真世界（简版）
-├── models/
-│   └── robot/
-│       ├── model.config         # 模型元信息
-│       └── model.sdf            # 机械臂 SDF 模型
-├── urdf/
-│   ├── episode1_urdf_1113.urdf  # URDF 格式模型
-│   └── robot.sdf                # SDF 格式模型（原始）
-├── meshes/
-│   ├── visual/                  # 可视化网格 (STL)
-│   └── collision/               # 碰撞网格 (STL)
-├── config/
-│   └── gz_bridge.yaml           # Gazebo-ROS 桥接
-├── rviz/
-│   └── view.rviz                # RViz 配置
-└── setup.py                     # 包安装配置
-```
-
----
-
-## VirtualBox 常见问题
-
-### 黑屏 / 无画面
-
-```bash
-export LIBGL_ALWAYS_SOFTWARE=1
-```
-
-世界文件已使用 `ogre` 替代 `ogre2` 渲染引擎，VirtualBox 兼容。
+位置接口增益过低导致，见上文「位置接口增益」。不是扭矩问题。
 
 ### 机械臂自由落体
 
-确保启动前清理旧进程：
+清理旧进程与缓存后重启：
 
 ```bash
 pkill -9 gz 2>/dev/null
 rm -rf ~/.gz
 ```
 
-### 看不到关节话题
-
-模型文件路径错误。检查 `GZ_SIM_RESOURCE_PATH` 是否包含 `models/` 目录：
-
-```bash
-echo $GZ_SIM_RESOURCE_PATH
-```
-
-应包含 `.../share/episode1_urdf_1113/models/`。
-
 ---
 
-## SDF 世界文件写法要点
+## 七、目录结构
 
-### 1. 世界级插件（`<world><plugin>`）
-
-物理、传感器、渲染等全局系统：
-
-```xml
-<world name="xxx">
-  <plugin name='gz::sim::systems::Physics' filename='gz-sim-physics-system'/>
-  <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
-    <render_engine>ogre</render_engine>
-  </plugin>
-</world>
 ```
+episode1_urdf_1113/
+├── launch/
+│   ├── gz_simulator_launch.py   # 传统 SDF+PID 仿真启动
+│   └── launch.py                # RViz 可视化（无物理）
+├── world/
+│   ├── empty_ground.sdf         # 仿真世界（简版）
+│   └── depot.sdf
+├── models/robot/                # Gazebo SDF 模型（旧版 PID）
+│   ├── model.config
+│   └── model.sdf
+├── urdf/
+│   ├── episode1_urdf_1113.urdf  # URDF 格式模型（权威源）
+│   └── robot.sdf                # SDF 格式模型（原始）
+├── meshes/
+│   ├── visual/                  # 可视化网格 (STL)
+│   └── collision/               # 碰撞网格 (STL)
+├── config/gz_bridge.yaml        # Gazebo-ROS 桥接
+└── rviz/view.rviz               # RViz 配置
 
-### 2. 模型级插件（`<model><plugin>`）
-
-关节控制器等模型专属功能：
-
-```xml
-<model name="robot">
-  <plugin filename="gz-sim-joint-controller-system"
-          name="gz::sim::systems::JointController">
-    <joint_name>joint1</joint_name>
-    <p_gain>200</p_gain>
-  </plugin>
-</model>
+episode1_moveit_config/
+├── config/
+│   ├── episode1_urdf_1113.urdf.xacro          # 汇总 URDF + ros2_control
+│   ├── episode1_urdf_1113.ros2_control.xacro  # 硬件接口 + 插件 + 增益
+│   ├── episode1_urdf_1113.srdf                # 规划组 / 预置姿态
+│   ├── ros2_controllers.yaml                  # 控制器配置
+│   ├── moveit_controllers.yaml                # MoveIt 控制器映射
+│   ├── gz_bridge.yaml                         # clock 桥接
+│   ├── empty_ground.sdf                       # 仿真世界
+│   └── ...                                    # kinematics / OMPL / joint_limits
+└── launch/
+    ├── gz_moveit.launch.py                    # 完整流水线（主入口）
+    ├── move_group.launch.py
+    ├── moveit_rviz.launch.py
+    └── ...
 ```
-
-### 3. `<include>` 加载外部模型
-
-```xml
-<include>
-  <pose>0 0 0.05 0 0 0</pose>
-  <uri>model://robot</uri>  <!-- 解析路径: GZ_SIM_RESOURCE_PATH/models/robot/ -->
-</include>
-```
-
-`model://` URI 要求在 `GZ_SIM_RESOURCE_PATH` 的某个路径下存在 `模型名/model.config` 文件。
-
----
-
-## 两种仿真模式对比
-
-| | RViz (launch.py) | Gazebo (gz_simulator_launch.py) |
-|------|------|------|
-| 用途 | 查看模型结构 + TF | 完整物理仿真 |
-| 物理引擎 | 无 | ODE |
-| 关节控制 | 滑块拖拽 | `gz topic` 命令 |
-| 传感器 | 无 | IMU/Camera/LaserScan |
-| GPU 需求 | 低 | 较高（VirtualBox 需软渲染） |
-| 启动速度 | 秒开 | 需要初始化物理引擎 |

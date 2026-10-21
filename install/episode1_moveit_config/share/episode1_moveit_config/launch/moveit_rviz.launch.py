@@ -1,1 +1,0 @@
-/home/lccj/student_ros/src/episode1_moveit_config/launch/moveit_rviz.launch.py

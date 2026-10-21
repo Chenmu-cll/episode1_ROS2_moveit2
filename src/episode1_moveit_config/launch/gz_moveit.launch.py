@@ -6,6 +6,7 @@ from launch.actions import (
     IncludeLaunchDescription,
     TimerAction,
     SetEnvironmentVariable,
+    UnsetEnvironmentVariable,
 )
 from launch.substitutions import LaunchConfiguration, Command
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -43,11 +44,25 @@ def generate_launch_description():
     # ================================================================
     world_path = os.path.join(moveit_config_pkg, "config", "empty_ground.sdf")
 
-    # 软件渲染 (VirtualBox/无GPU环境必须)
-    software_render = SetEnvironmentVariable(
-        name="LIBGL_ALWAYS_SOFTWARE",
-        value="1",
-    )
+    # ================================================================
+    # 清理 snap 环境污染 (物理机 + NVIDIA 独显)
+    # ================================================================
+    # 根因：本环境通过 snap 版 VS Code 启动，集成终端继承了 snap 的
+    #       GTK_PATH=/snap/code/.../gtk-3.0，导致 gz sim gui 的 Qt 进程
+    #       加载 /snap/code/.../gtk-3.0/modules/libcanberra-gtk-module.so，
+    #       而该 .so 的 RPATH 指向 /snap/core20/.../libpthread.so.0
+    #       （Ubuntu 20.04 的 glibc 2.31）。Ubuntu 24.04 系统 glibc 2.39
+    #       已把 libpthread 并入 libc，加载旧版 libpthread 会触发
+    #       "undefined symbol: __libc_pthread_init, version GLIBC_PRIVATE"，
+    #       导致 gz sim gui 闪退、连带 server 一起被回收。
+    # 修复：清掉这些 snap 变量，让 Gazebo GUI 使用系统原生库。
+    # 注意：必须清 GTK_PATH（不是 SNAP_LIBRARY_PATH）；后者只含显卡驱动
+    #       目录（/var/lib/snapd/lib/gl），并不含 core20 的 libpthread。
+    clear_snap_gtk_path = UnsetEnvironmentVariable(name="GTK_PATH")
+    clear_snap_gtk_modules = UnsetEnvironmentVariable(name="GTK_MODULES")
+    clear_snap_pixbuf_dir = UnsetEnvironmentVariable(name="GDK_PIXBUF_MODULEDIR")
+    clear_snap_pixbuf_file = UnsetEnvironmentVariable(name="GDK_PIXBUF_MODULE_FILE")
+    clear_snap_lib_path = UnsetEnvironmentVariable(name="SNAP_LIBRARY_PATH")
 
     gz_resource_path = SetEnvironmentVariable(
         name="GZ_SIM_RESOURCE_PATH",
@@ -68,7 +83,7 @@ def generate_launch_description():
                 "gz_sim.launch.py",
             )
         ),
-        launch_arguments={"gz_args": ["-r -s -v 4 ", world_path]}.items(),
+        launch_arguments={"gz_args": ["-r -v 4 ", world_path]}.items(),
     )
 
     # ================================================================
@@ -128,33 +143,33 @@ def generate_launch_description():
     )
 
     # ================================================================
-    # ros2_control controller_manager
+    # ros2_control controller_manager —— 不再单独启动 ros2_control_node！
+    # 根因：gz_ros2_control 的 GazeboSimROS2ControlPlugin 在 Gazebo 进程内部
+    #       实例化 controller_manager（从 <gazebo><plugin> 里读取嵌套的
+    #       <ros2_control> 与 <parameters>）。单独启动的 ros2_control_node
+    #       会用基类 hardware_interface::SystemInterface 去加载
+    #       GazeboSimSystem，从而抛出 LibraryLoadException（该插件实际注册在
+    #       基类 gz_ros2_control::GazeboSimSystemInterface 下）。
+    # 因此：spawn_entity 生成机器人后，Gazebo 插件会自动拉起 controller_manager，
+    #       我们只需要用 spawner 往它里面加载控制器即可。
     # ================================================================
-    controller_manager_yaml = os.path.join(
-        moveit_config_pkg, "config", "ros2_controllers.yaml"
-    )
-    controller_manager = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        parameters=[robot_description, controller_manager_yaml, {"use_sim_time": True}],
-        output="screen",
-    )
 
     # ================================================================
     # 加载控制器 (joint_state_broadcaster + arm_group_controller)
     # ================================================================
-    spawn_jsb = Node(
+    # 合并成一个 spawner 一次性加载两个控制器。
+    # 根因：之前分开成两个 spawner（jsb @7s、arm @8s），它们共用同一个
+    #       ~/.ros/locks/ros2-control-controller-spawner.lock 文件锁。
+    #       先拿到锁的 jsb spawner 若在 list_controllers 上等待
+    #       controller_manager（Gazebo 内的 CM 尚未就绪时 service_timeout=0
+    #       会无限等待），就会一直占着锁不放，导致 arm spawner 5 次
+    #       (20s+3s) 全部超时 → "Failed to acquire lock" → exit 1。
+    #       单个 spawner 按顺序加载 joint_state_broadcaster → arm_group_controller，
+    #       只拿一次锁，彻底消除锁竞争。
+    spawn_controllers = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_state_broadcaster"],
-        output="screen",
-        parameters=[{"use_sim_time": True}],
-    )
-
-    spawn_arm_ctrl = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["arm_group_controller"],
+        arguments=["joint_state_broadcaster", "arm_group_controller"],
         output="screen",
         parameters=[{"use_sim_time": True}],
     )
@@ -193,7 +208,11 @@ def generate_launch_description():
                 default_value="true",
                 description="Use simulation clock if true",
             ),
-            software_render,
+            clear_snap_gtk_path,
+            clear_snap_gtk_modules,
+            clear_snap_pixbuf_dir,
+            clear_snap_pixbuf_file,
+            clear_snap_lib_path,
             gz_resource_path,
             gz_sim,
             bridge,
@@ -201,11 +220,9 @@ def generate_launch_description():
             world_to_base_tf,
             # 等 Gazebo 启动后再生成机器人
             TimerAction(period=3.0, actions=[spawn_entity]),
-            # 等机器人 spawn 后再启动 controller_manager（硬件接口需在机器人就位后初始化）
-            TimerAction(period=5.0, actions=[controller_manager]),
-            # 等 controller_manager 准备好再加载控制器
-            TimerAction(period=7.0, actions=[spawn_jsb]),
-            TimerAction(period=8.0, actions=[spawn_arm_ctrl]),
+            # 机器人 spawn 后，Gazebo 插件内的 controller_manager 自动上线；
+            # 等它准备好再加载控制器
+            TimerAction(period=7.0, actions=[spawn_controllers]),
             # 等控制器加载完再启动 MoveIt
             TimerAction(period=10.0, actions=[move_group]),
             # RViz 最后启动
